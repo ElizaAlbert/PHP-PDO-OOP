@@ -9,17 +9,21 @@ class Product extends allProducts
 {
     public function singleProduct()
     {
-        $product_id = $_GET['ID']; // hämtar URL id
-        $sth = $this->connect()->prepare("SELECT * FROM products WHERE id = $product_id"); // query
-        $sth->execute();
-        $singleProduct = $sth->fetch(PDO::FETCH_ASSOC);
+        $product_id = $_GET["ID"];
+        $stmt = $this->connect()->prepare("SELECT * FROM products WHERE id = :n"); // query
+        $stmt->bindParam('n', $product_id);
+        $stmt->execute();
 
+        while ($row = $stmt->fetch()) {
+            $name = $row['name'];
+            $id = $row['id'];
 
-        echo " <p style='text-align: center'>Product name: "
-            . $singleProduct['name']
-            . "<br>"
-            . "Price: "
-            . $singleProduct["price"] . " kr </p>";
+            echo " <p style='text-align: center'>Product name: "
+                . $row['name']
+                . "<br>"
+                . "Price: "
+                . $row["price"] . " kr </p>";
+        }
     }
 }
 
